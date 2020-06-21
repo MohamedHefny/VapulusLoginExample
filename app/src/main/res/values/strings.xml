@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">VapulusTest</string>
+    <string name="login_to_vapulus_label">Log in to Vapulus</string>
+    <string name="login_username_label">Vapulus ID, email or mobile</string>
+    <string name="login_password_label">Password</string>
+    <string name="forget_password_label">Forget password?</string>
+    <string name="login_label">Log in</string>
+    <string name="or_login_with">or login with</string>
+    <string name="new_to_vapulus">New to Vapulus?</string>
+    <string name="sign_up">Sign up</string>
 </resources>
