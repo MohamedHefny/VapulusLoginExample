@@ -10,6 +10,7 @@ import com.example.vapulustest.data.remote.models.PincodeResponse
 import com.example.vapulustest.data.remote.models.Response
 import com.example.vapulustest.ui.join.login.LoginViewState
 import com.example.vapulustest.ui.join.pinCode.PinCodeViewState
+import com.example.vapulustest.utils.NetworkUtils
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -28,6 +29,11 @@ object JoinRepository {
 
         val loginViewState = MutableLiveData<LoginViewState>()
             .also { it.value = LoginViewState.Loading }
+
+        if (NetworkUtils.isNetworkConnected().not())
+            return loginViewState.also {
+                it.value = LoginViewState.LoginErrorError(NetworkUtils.noInternetErrorMsg)
+            }
 
         apiClient.login(userName, password)
             .enqueue(object : Callback<Response<LoginResponse>> {
@@ -64,6 +70,11 @@ object JoinRepository {
 
         val pinCodeViewState = MutableLiveData<PinCodeViewState>()
             .also { it.value = PinCodeViewState.Loading }
+
+        if (NetworkUtils.isNetworkConnected().not())
+            return pinCodeViewState.also {
+                it.value = PinCodeViewState.PinCodeError(NetworkUtils.noInternetErrorMsg)
+            }
 
         apiClient.validatePinCode(userToken, deviceToken, pinCode)
             .enqueue(object : Callback<PincodeResponse> {
