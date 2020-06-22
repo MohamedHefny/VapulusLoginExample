@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_join_blue_gradient"
+    android:paddingBottom="12dp"
+    tools:context=".ui.join.pinCode.PinCodeFragment">
+
+    <ImageButton
+        android:id="@+id/pin_code_back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_back_arrow_white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/pin_code_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="72dp"
+        android:text="@string/enter_pin_code"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/pin_code_indicator_iv"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:src="@drawable/dot0"
+        app:layout_constraintBottom_toTopOf="@id/pin_code_keypad_container"
+        app:layout_constraintEnd_toEndOf="@id/pin_code_label"
+        app:layout_constraintStart_toStartOf="@id/pin_code_label"
+        app:layout_constraintTop_toBottomOf="@id/pin_code_label" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pin_code_keypad_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/pin_code_forget_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pin_code_indicator_iv">
+
+        <TextView
+            android:id="@+id/pin_num1"
+            style="@style/NumPadButtonStyle"
+            android:text="@string/num_pad_1"
+            app:layout_constraintBottom_toTopOf="@id/pin_num4"
+            app:layout_constraintEnd_toStartOf="@id/pin_num2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/pin_num2"
+            style="@style/NumPadButtonStyle"
+            android:text="@string/num_pad_2"
+            app:layout_constraintBottom_toTopOf="@id/pin_num4"
+            app:layout_constraintEnd_toStartOf="@id/pin_num3"
+            app:layout_constraintStart_toEndOf="@id/pin_num1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/pin_num3"
+            style="@style/NumPadButtonStyle"
+            android:text="@string/num_pad_3"
+            app:layout_constraintBottom_toTopOf="@id/pin_num4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/pin_num2"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/pin_num4"
+            style="@style/NumPadButtonStyle"
+            android:text="@string/num_pad_4"
+            app:layout_constraintBottom_toTopOf="@id/pin_num7"
+            app:layout_constraintEnd_toStartOf="@id/pin_num5"
+            app:layout_constraintStart_toStartOf="@id/pin_num1"
+            app:layout_constraintTop_toBottomOf="@id/pin_num1" />
+
+        <TextView
+            android:id="@+id/pin_num5"
+            style="@style/NumPadButtonStyle"
+            android:text="@string/num_pad_5"
+            app:layout_constraintBottom_toTopOf="@id/pin_num7"
+            app:layout_constraintEnd_toStartOf="@id/pin_num6"
+            app:layout_constraintStart_toEndOf="@id/pin_num4"
+            app:layout_constraintTop_toBottomOf="@id/pin_num1" />
+
+        <TextView
+            android:id="@+id/pin_num6"
+            style="@style/NumPadButtonStyle"
+            android:text="@string/num_pad_6"
+            app:layout_constraintBottom_toTopOf="@id/pin_num7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/pin_num5"
+            app:layout_constraintTop_toBottomOf="@id/pin_num1" />
+
+        <TextView
+            android:id="@+id/pin_num7"
+            style="@style/NumPadButtonStyle"
+            android:text="@string/num_pad_7"
+            app:layout_constraintBottom_toTopOf="@id/pin_num_logout"
+            app:layout_constraintEnd_toStartOf="@id/pin_num8"
+            app:layout_constraintStart_toStartOf="@id/pin_num4"
+            app:layout_constraintTop_toBottomOf="@id/pin_num4" />
+
+        <TextView
+            android:id="@+id/pin_num8"
+            style="@style/NumPadButtonStyle"
+            android:text="@string/num_pad_8"
+            app:layout_constraintBottom_toTopOf="@id/pin_num_logout"
+            app:layout_constraintEnd_toStartOf="@id/pin_num9"
+            app:layout_constraintStart_toEndOf="@id/pin_num7"
+            app:layout_constraintTop_toBottomOf="@id/pin_num4" />
+
+        <TextView
+            android:id="@+id/pin_num9"
+            style="@style/NumPadButtonStyle"
+            android:text="@string/num_pad_9"
+            app:layout_constraintBottom_toTopOf="@id/pin_num_logout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/pin_num8"
+            app:layout_constraintTop_toBottomOf="@id/pin_num4" />
+
+        <TextView
+            android:id="@+id/pin_num_logout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="@string/logout"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/pin_num0"
+            app:layout_constraintStart_toStartOf="@id/pin_num7"
+            app:layout_constraintTop_toBottomOf="@id/pin_num7" />
+
+        <TextView
+            android:id="@+id/pin_num0"
+            style="@style/NumPadButtonStyle"
+            android:text="@string/num_pad_0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/pin_num_reset"
+            app:layout_constraintStart_toEndOf="@id/pin_num_logout"
+            app:layout_constraintTop_toBottomOf="@id/pin_num7" />
+
+        <TextView
+            android:id="@+id/pin_num_reset"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="@string/reset"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/pin_num0"
+            app:layout_constraintTop_toBottomOf="@id/pin_num7" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/pin_code_forget_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/Forgot_pin_code"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pin_code_keypad_container" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
