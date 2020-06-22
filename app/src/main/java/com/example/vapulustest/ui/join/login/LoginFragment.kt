@@ -45,7 +45,7 @@ class LoginFragment : Fragment() {
                                 changeUiInteraction(true)
                                 findNavController().navigate(R.id.action_loginFragment_to_pinCodeFragment)
                             }
-                            is LoginViewState.LoginErrorError -> {
+                            is LoginViewState.LoginError -> {
                                 changeUiInteraction(true)
                                 if (it.message == "Unknown")
                                     Toast.makeText(context, R.string.login_error, Toast.LENGTH_LONG)

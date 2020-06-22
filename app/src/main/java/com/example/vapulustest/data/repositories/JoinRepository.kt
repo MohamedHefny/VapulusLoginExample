@@ -32,7 +32,7 @@ object JoinRepository {
 
         if (NetworkUtils.isNetworkConnected().not())
             return loginViewState.also {
-                it.value = LoginViewState.LoginErrorError(NetworkUtils.noInternetErrorMsg)
+                it.value = LoginViewState.LoginError(NetworkUtils.noInternetErrorMsg)
             }
 
         apiClient.login(userName, password)
@@ -46,14 +46,14 @@ object JoinRepository {
                             LoginViewState.LoginSuccess(response.body()?.data!!)
                     else if (response.isSuccessful.not() && response.body() != null)
                         loginViewState.value =
-                            LoginViewState.LoginErrorError(response.body()?.message.toString())
+                            LoginViewState.LoginError(response.body()?.message.toString())
                     else
-                        loginViewState.value = LoginViewState.LoginErrorError("Unknown")
+                        loginViewState.value = LoginViewState.LoginError("Unknown")
                 }
 
                 override fun onFailure(call: Call<Response<LoginResponse>>, t: Throwable) {
                     Log.e(tag, t.message.toString())
-                    loginViewState.value = LoginViewState.LoginErrorError("Unknown")
+                    loginViewState.value = LoginViewState.LoginError("Unknown")
                 }
             })
         return loginViewState
