@@ -32,8 +32,6 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         login_btn.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_pinCodeFragment)
-
             val userName = login_username_et.text.toString()
             val password = login_password_et.text.toString()
             if (joinViewModel.isLoginDataValid(userName, password)) {
@@ -56,7 +54,6 @@ class LoginFragment : Fragment() {
                 .makeText(context, it ?: getString(R.string.login_error), Toast.LENGTH_LONG)
                 .show()
         })
-
     }
 
     /**

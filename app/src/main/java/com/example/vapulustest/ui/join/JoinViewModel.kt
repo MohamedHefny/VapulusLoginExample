@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel
 import com.example.vapulustest.data.remote.ApiClient
 import com.example.vapulustest.data.remote.ApiServices
 import com.example.vapulustest.data.remote.models.LoginResponse
+import com.example.vapulustest.data.remote.models.PincodeResponse
 import com.example.vapulustest.data.remote.models.Response
+import com.example.vapulustest.ui.join.pinCode.PinCodeViewState
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -30,9 +32,20 @@ class JoinViewModel : ViewModel() {
         get() = _loginErrorMsg
 
     private val _pinCode: MutableLiveData<String>
-            by lazy { MutableLiveData<String>().also { it.value = "" } }
+            by lazy { MutableLiveData<String>() }
     val pinCode: LiveData<String>
-        get() = _pinCode
+        get() {
+            _pinCode.value = ""
+            return _pinCode
+        }
+
+    private val _pinCodeViewState: MutableLiveData<PinCodeViewState>
+            by lazy { MutableLiveData<PinCodeViewState>() }
+    val pinCodeViewState: LiveData<PinCodeViewState>
+        get() {
+            _pinCodeViewState.value = PinCodeViewState.Initial
+            return _pinCodeViewState
+        }
 
     /**
      * Perform user login
@@ -86,5 +99,33 @@ class JoinViewModel : ViewModel() {
      * */
     fun resetPinCode() {
         _pinCode.value = ""
+    }
+
+    fun validatePinCode(
+        userToken: String = loginResponse.value!!.userToken,
+        deviceToken: String = loginResponse.value!!.deviceToken,
+        pinCode: String
+    ) {
+        _pinCodeViewState.value = PinCodeViewState.Loading
+
+        apiClient.validatePinCode(userToken, deviceToken, pinCode)
+            .enqueue(object : Callback<PincodeResponse> {
+                override fun onResponse(
+                    call: Call<PincodeResponse>,
+                    response: retrofit2.Response<PincodeResponse>
+                ) {
+                    if (response.isSuccessful && response.body()?.statusCode in 200..204)
+                        _pinCodeViewState.value =
+                            PinCodeViewState.PinCodeValid(response.body()?.message.toString())
+                    else
+                        _pinCodeViewState.value =
+                            PinCodeViewState.PinCodeError(response.body()?.message.toString())
+                }
+
+                override fun onFailure(call: Call<PincodeResponse>, t: Throwable) {
+                    Log.e(tag, "PinCode Error: ${t.message}")
+                    _pinCodeViewState.value = PinCodeViewState.PinCodeError("Unknown")
+                }
+            })
     }
 }

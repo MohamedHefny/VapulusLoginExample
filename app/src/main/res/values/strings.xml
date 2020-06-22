@@ -26,5 +26,6 @@
     <string name="reset">Reset</string>
     <string name="enter_pin_code">Enter PIN Code</string>
     <string name="Forgot_pin_code">Forgot PIN CODE?</string>
+    <string name="pin_code_validation_error">PIN-Code validation error! Please try again.</string>
 
 </resources>
