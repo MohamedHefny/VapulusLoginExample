@@ -114,6 +114,11 @@ class JoinViewModel : ViewModel() {
         _pinCode.value = ""
     }
 
+    /**
+     * Call the api to check the PIN-Code is valid oe not.
+     * @param userToken that is returned from the login process.
+     * @param deviceToken that is returned from the login process.
+     */
     fun validatePinCode(userToken: String, deviceToken: String, pinCode: String) {
         _pinCodeViewState.value = PinCodeViewState.Loading
 
