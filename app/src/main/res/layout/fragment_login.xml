@@ -34,7 +34,6 @@
         app:layout_constraintStart_toStartOf="@id/login_content_container"
         app:layout_constraintTop_toBottomOf="@id/login_app_logo_guideline" />
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/login_content_container"
         android:layout_width="0dp"
@@ -185,4 +184,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/login_signin_label_tv"
         app:layout_constraintTop_toTopOf="@id/login_signin_label_tv" />
+
+    <include
+        android:id="@+id/login_loading_layout"
+        layout="@layout/layout_loading"
+        android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

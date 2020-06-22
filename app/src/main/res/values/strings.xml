@@ -8,4 +8,6 @@
     <string name="or_login_with">or login with</string>
     <string name="new_to_vapulus">New to Vapulus?</string>
     <string name="sign_up">Sign up</string>
+    <string name="login_error">Login error! Please try again.</string>
+    <string name="enter_valid_data">Please enter a valid data!</string>
 </resources>
