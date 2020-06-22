@@ -9,6 +9,7 @@ import com.example.vapulustest.data.remote.ApiServices
 import com.example.vapulustest.data.remote.models.LoginResponse
 import com.example.vapulustest.data.remote.models.PincodeResponse
 import com.example.vapulustest.data.remote.models.Response
+import com.example.vapulustest.ui.join.login.LoginViewState
 import com.example.vapulustest.ui.join.pinCode.PinCodeViewState
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,20 +24,12 @@ class JoinViewModel : ViewModel() {
 
     private val apiClient: ApiServices by lazy { ApiClient.apiServices }
 
-    private val _loginResponse: MutableLiveData<LoginResponse> by lazy { MutableLiveData<LoginResponse>() }
-    val loginResponse: LiveData<LoginResponse>
-        get() = _loginResponse
-
-    private val _loginErrorMsg: MutableLiveData<String?> by lazy { MutableLiveData<String?>() }
-    val loginErrorMsg: LiveData<String?>
-        get() = _loginErrorMsg
-
-    private val _pinCode: MutableLiveData<String>
-            by lazy { MutableLiveData<String>() }
-    val pinCode: LiveData<String>
+    private val _loginViewState: MutableLiveData<LoginViewState>
+            by lazy { MutableLiveData<LoginViewState>() }
+    val loginViewState: LiveData<LoginViewState>
         get() {
-            _pinCode.value = ""
-            return _pinCode
+            _loginViewState.value = LoginViewState.Initial
+            return _loginViewState
         }
 
     private val _pinCodeViewState: MutableLiveData<PinCodeViewState>
@@ -47,12 +40,22 @@ class JoinViewModel : ViewModel() {
             return _pinCodeViewState
         }
 
+    private val _pinCode: MutableLiveData<String>
+            by lazy { MutableLiveData<String>() }
+    val pinCode: LiveData<String>
+        get() {
+            _pinCode.value = ""
+            return _pinCode
+        }
+
     /**
      * Perform user login
      * @param userName is Vapulus ID, email or mobile number
      * @param password is Vapulus user password
      */
     fun performLogin(userName: String, password: String) {
+        _loginViewState.value = LoginViewState.Loading
+
         apiClient.login(userName, password)
             .enqueue(object : Callback<Response<LoginResponse>> {
                 override fun onResponse(
@@ -60,16 +63,18 @@ class JoinViewModel : ViewModel() {
                     response: retrofit2.Response<Response<LoginResponse>>
                 ) {
                     if (response.isSuccessful && response.body()?.statusCode in 200..204)
-                        _loginResponse.value = response.body()?.data
-                    else if (response.body() != null)
-                        _loginErrorMsg.value = response.body()?.message
+                        _loginViewState.value =
+                            LoginViewState.LoginSuccess(response.body()?.data!!)
+                    else if (response.isSuccessful.not() && response.body() != null)
+                        _loginViewState.value =
+                            LoginViewState.LoginErrorError(response.body()?.message.toString())
                     else
-                        _loginErrorMsg.value = null
+                        _loginViewState.value = LoginViewState.LoginErrorError("Unknown")
                 }
 
                 override fun onFailure(call: Call<Response<LoginResponse>>, t: Throwable) {
                     Log.e(tag, t.message.toString())
-                    _loginErrorMsg.value = null
+                    _loginViewState.value = LoginViewState.LoginErrorError("Unknown")
                 }
             })
     }
@@ -87,6 +92,14 @@ class JoinViewModel : ViewModel() {
     }
 
     /**
+     * @return the user data that will used for PIN-Code checking.
+     * */
+    fun getUserCredentials(): LoginResponse {
+        val userCredentials = _loginViewState.value as LoginViewState.LoginSuccess
+        return userCredentials.loginData
+    }
+
+    /**
      * Add new PIN-number to the existing PIN-Code
      * @param pinNumber is the next new number of the PIN-Code.
      */
@@ -101,11 +114,7 @@ class JoinViewModel : ViewModel() {
         _pinCode.value = ""
     }
 
-    fun validatePinCode(
-        userToken: String = loginResponse.value!!.userToken,
-        deviceToken: String = loginResponse.value!!.deviceToken,
-        pinCode: String
-    ) {
+    fun validatePinCode(userToken: String, deviceToken: String, pinCode: String) {
         _pinCodeViewState.value = PinCodeViewState.Loading
 
         apiClient.validatePinCode(userToken, deviceToken, pinCode)

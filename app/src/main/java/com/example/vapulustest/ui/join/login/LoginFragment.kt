@@ -41,18 +41,23 @@ class LoginFragment : Fragment() {
                 Toast.makeText(context, R.string.enter_valid_data, Toast.LENGTH_SHORT).show()
         }
 
-        //Observe login status
-        joinViewModel.loginResponse.observe(viewLifecycleOwner, Observer {
-            changeUiInteraction(true)
-            findNavController().navigate(R.id.action_loginFragment_to_pinCodeFragment)
-        })
-
-        //Observe login errors
-        joinViewModel.loginErrorMsg.observe(viewLifecycleOwner, Observer {
-            changeUiInteraction(true)
-            Toast
-                .makeText(context, it ?: getString(R.string.login_error), Toast.LENGTH_LONG)
-                .show()
+        //Observe view state and update the ui.
+        joinViewModel.loginViewState.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is LoginViewState.Initial -> changeUiInteraction(true)
+                is LoginViewState.Loading -> changeUiInteraction(false)
+                is LoginViewState.LoginSuccess -> {
+                    changeUiInteraction(true)
+                    findNavController().navigate(R.id.action_loginFragment_to_pinCodeFragment)
+                }
+                is LoginViewState.LoginErrorError -> {
+                    changeUiInteraction(true)
+                    if (it.message == "Unknown")
+                        Toast.makeText(context, R.string.login_error, Toast.LENGTH_LONG).show()
+                    else
+                        Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                }
+            }
         })
     }
 
