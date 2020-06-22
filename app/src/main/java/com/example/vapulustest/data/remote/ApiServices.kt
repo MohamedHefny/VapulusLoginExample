@@ -1,6 +1,7 @@
 package com.example.vapulustest.data.remote
 
 import com.example.vapulustest.data.remote.models.LoginResponse
+import com.example.vapulustest.data.remote.models.PincodeResponse
 import com.example.vapulustest.data.remote.models.Response
 import retrofit2.Call
 import retrofit2.http.Field
@@ -17,5 +18,14 @@ interface ApiServices {
         @Field("fingerPrint") fingerPrint: String = "FingerPrintRandomData",
         @Field("uHeader") uHeader: String = "@\"{\\\"browser\\\":{\\\"name\\\":\\\"%@\\\",\\\"version\\\":\\\"%@\\\",\\\"major\\\":\\\"0\\\"},\\\"os\\\":\\\"IOS\\\",\\\"engine\\\":\\\"mobile\\\"}\""
     ): Call<Response<LoginResponse>>
+
+    @POST("/user/checkPinCode")
+    @FormUrlEncoded
+    fun validatePinCode(
+        @Field("authorization") userToken: String,
+        @Field("deviceToken") deviceToken: String,
+        @Field("pinCode") pinCode: String,
+        @Field("fingerPrint") fingerPrint: String = "FingerPrintRandomData"
+    ): Call<PincodeResponse>
 
 }

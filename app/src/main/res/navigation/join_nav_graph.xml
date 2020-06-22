@@ -9,5 +9,14 @@
         android:id="@+id/loginFragment"
         android:name="com.example.vapulustest.ui.join.login.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_pinCodeFragment"
+            app:destination="@id/pinCodeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pinCodeFragment"
+        android:name="com.example.vapulustest.ui.join.pinCode.PinCodeFragment"
+        android:label="fragment_pin_code"
+        tools:layout="@layout/fragment_pin_code" />
 </navigation>
