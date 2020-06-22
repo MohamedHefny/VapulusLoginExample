@@ -48,36 +48,15 @@ class PinCodeFragment : Fragment(), View.OnClickListener, View.OnTouchListener {
         pin_code_back_btn.setOnClickListener(this)
 
         //Observe PIN-Code changes and update the ui.
-        joinViewModel.pinCode.observe(viewLifecycleOwner, Observer {
-            when (it.length) {
+        joinViewModel.pinCode.observe(viewLifecycleOwner, Observer { pinCode ->
+            when (pinCode.length) {
                 0 -> pin_code_indicator_iv.setImageResource(R.drawable.dot0)
                 1 -> pin_code_indicator_iv.setImageResource(R.drawable.dot1)
                 2 -> pin_code_indicator_iv.setImageResource(R.drawable.dot2)
                 3 -> pin_code_indicator_iv.setImageResource(R.drawable.dot3)
                 4 -> { //PIN-Code is complete
                     pin_code_indicator_iv.setImageResource(R.drawable.dot4)
-                    joinViewModel.validatePinCode(pinCode = it)
-                }
-            }
-        })
-
-        //Observe view state and update the ui.
-        joinViewModel.pinCodeViewState.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is PinCodeViewState.Initial -> changeUiInteraction(true)
-                is PinCodeViewState.Loading -> changeUiInteraction(false)
-                is PinCodeViewState.PinCodeValid -> {
-                    Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
-                    changeUiInteraction(true)
-                }
-                is PinCodeViewState.PinCodeError -> {
-                    if (it.message == "Unknown")
-                        Toast.makeText(
-                            context, R.string.pin_code_validation_error, Toast.LENGTH_LONG
-                        ).show()
-                    else
-                        Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
-                    changeUiInteraction(true)
+                    sendToValidate(pinCode)
                 }
             }
         })
@@ -95,6 +74,32 @@ class PinCodeFragment : Fragment(), View.OnClickListener, View.OnTouchListener {
             pin_code_loading_layout.show()
             loading_icon.rotate()
         }
+    }
+
+    /**
+     * Ask ViewModel to start validate the PIN-Code.
+     * @param pinCode is the corresponding user PIN-Code
+     * */
+    private fun sendToValidate(pinCode: String) {
+        joinViewModel.validatePinCode(pinCode = pinCode)
+            .observe(viewLifecycleOwner, Observer {
+                when (it) {
+                    is PinCodeViewState.Loading -> changeUiInteraction(false)
+                    is PinCodeViewState.PinCodeValid -> {
+                        Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                        changeUiInteraction(true)
+                    }
+                    is PinCodeViewState.PinCodeError -> {
+                        if (it.message == "Unknown")
+                            Toast.makeText(
+                                context, R.string.pin_code_validation_error, Toast.LENGTH_LONG
+                            ).show()
+                        else
+                            Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                        changeUiInteraction(true)
+                    }
+                }
+            })
     }
 
     override fun onClick(v: View?) {

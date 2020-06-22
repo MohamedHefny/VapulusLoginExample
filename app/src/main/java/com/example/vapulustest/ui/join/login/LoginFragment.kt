@@ -34,26 +34,30 @@ class LoginFragment : Fragment() {
         login_btn.setOnClickListener {
             val userName = login_username_et.text.toString()
             val password = login_password_et.text.toString()
+
             if (joinViewModel.isLoginDataValid(userName, password)) {
                 changeUiInteraction(false)
                 joinViewModel.performLogin(userName, password)
+                    .observe(viewLifecycleOwner, Observer {
+                        when (it) {
+                            is LoginViewState.Loading -> changeUiInteraction(false)
+                            is LoginViewState.LoginSuccess -> {
+                                changeUiInteraction(true)
+                                findNavController().navigate(R.id.action_loginFragment_to_pinCodeFragment)
+                            }
+                            is LoginViewState.LoginError -> {
+                                changeUiInteraction(true)
+                                if (it.message == "Unknown")
+                                    Toast.makeText(context, R.string.login_error, Toast.LENGTH_LONG)
+                                        .show()
+                                else
+                                    Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    })
             } else
                 Toast.makeText(context, R.string.enter_valid_data, Toast.LENGTH_SHORT).show()
         }
-
-        //Observe login status
-        joinViewModel.loginResponse.observe(viewLifecycleOwner, Observer {
-            changeUiInteraction(true)
-            findNavController().navigate(R.id.action_loginFragment_to_pinCodeFragment)
-        })
-
-        //Observe login errors
-        joinViewModel.loginErrorMsg.observe(viewLifecycleOwner, Observer {
-            changeUiInteraction(true)
-            Toast
-                .makeText(context, it ?: getString(R.string.login_error), Toast.LENGTH_LONG)
-                .show()
-        })
     }
 
     /**
