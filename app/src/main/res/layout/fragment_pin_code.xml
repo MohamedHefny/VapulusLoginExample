@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_join_blue_gradient"
-    android:paddingBottom="12dp"
     tools:context=".ui.join.pinCode.PinCodeFragment">
 
     <ImageButton
@@ -175,6 +174,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
         android:text="@string/Forgot_pin_code"
         android:textColor="@android:color/white"
         android:textSize="20sp"
@@ -183,4 +183,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/pin_code_keypad_container" />
 
+    <include
+        android:id="@+id/pin_code_loading_layout"
+        layout="@layout/layout_loading"
+        android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>
