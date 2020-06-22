@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    //Login screen common dimensions
+    <dimen name="login_card_corners">12dp</dimen>
+    <dimen name="login_button_corners">32dp</dimen>
+    <dimen name="login_card_vertical_margin">24dp</dimen>
+    <dimen name="login_card_horizontal_margin">16dp</dimen>
+    <dimen name="login_content_container_elevation">4dp</dimen>
+    <dimen name="login_circular_logo_top_margin">53dp</dimen>
+    <dimen name="login_label_size">26sp</dimen>
+    <dimen name="login_container_content_edges_margin">16dp</dimen>
+</resources>
