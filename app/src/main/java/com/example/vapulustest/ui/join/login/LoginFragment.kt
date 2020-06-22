@@ -1,16 +1,14 @@
 package com.example.vapulustest.ui.join.login
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.example.vapulustest.R
 import com.example.vapulustest.ui.join.JoinViewModel
 import com.example.vapulustest.utils.hide
@@ -34,6 +32,8 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         login_btn.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_pinCodeFragment)
+
             val userName = login_username_et.text.toString()
             val password = login_password_et.text.toString()
             if (joinViewModel.isLoginDataValid(userName, password)) {
@@ -46,18 +46,15 @@ class LoginFragment : Fragment() {
         //Observe login status
         joinViewModel.loginResponse.observe(viewLifecycleOwner, Observer {
             changeUiInteraction(true)
-            Log.d(
-                "LoginData",
-                "DeviceToken: ${it.deviceToken} & UserToken: ${it.userToken}"
-            )
+            findNavController().navigate(R.id.action_loginFragment_to_pinCodeFragment)
         })
 
         //Observe login errors
         joinViewModel.loginErrorMsg.observe(viewLifecycleOwner, Observer {
             changeUiInteraction(true)
-            Toast.makeText(
-                context, it ?: getString(R.string.login_error), Toast.LENGTH_LONG
-            ).show()
+            Toast
+                .makeText(context, it ?: getString(R.string.login_error), Toast.LENGTH_LONG)
+                .show()
         })
 
     }
