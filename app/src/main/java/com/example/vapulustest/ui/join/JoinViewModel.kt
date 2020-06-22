@@ -3,12 +3,14 @@ package com.example.vapulustest.ui.join
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.vapulustest.data.remote.ApiClient
 import com.example.vapulustest.data.remote.ApiServices
 import com.example.vapulustest.data.remote.models.LoginResponse
 import com.example.vapulustest.data.remote.models.PincodeResponse
 import com.example.vapulustest.data.remote.models.Response
+import com.example.vapulustest.data.repositories.JoinRepository
 import com.example.vapulustest.ui.join.login.LoginViewState
 import com.example.vapulustest.ui.join.pinCode.PinCodeViewState
 import retrofit2.Call
@@ -24,13 +26,9 @@ class JoinViewModel : ViewModel() {
 
     private val apiClient: ApiServices by lazy { ApiClient.apiServices }
 
-    private val _loginViewState: MutableLiveData<LoginViewState>
-            by lazy { MutableLiveData<LoginViewState>() }
-    val loginViewState: LiveData<LoginViewState>
-        get() {
-            _loginViewState.value = LoginViewState.Initial
-            return _loginViewState
-        }
+    //This object is hold the user credentials data that needed to validate the PIB-Code
+    var userCredentials: LoginResponse? = null
+        private set
 
     private val _pinCodeViewState: MutableLiveData<PinCodeViewState>
             by lazy { MutableLiveData<PinCodeViewState>() }
@@ -52,31 +50,14 @@ class JoinViewModel : ViewModel() {
      * Perform user login
      * @param userName is Vapulus ID, email or mobile number
      * @param password is Vapulus user password
+     * @return a LiveData object that holds the view state.
      */
-    fun performLogin(userName: String, password: String) {
-        _loginViewState.value = LoginViewState.Loading
-
-        apiClient.login(userName, password)
-            .enqueue(object : Callback<Response<LoginResponse>> {
-                override fun onResponse(
-                    call: Call<Response<LoginResponse>>,
-                    response: retrofit2.Response<Response<LoginResponse>>
-                ) {
-                    if (response.isSuccessful && response.body()?.statusCode in 200..204)
-                        _loginViewState.value =
-                            LoginViewState.LoginSuccess(response.body()?.data!!)
-                    else if (response.isSuccessful.not() && response.body() != null)
-                        _loginViewState.value =
-                            LoginViewState.LoginErrorError(response.body()?.message.toString())
-                    else
-                        _loginViewState.value = LoginViewState.LoginErrorError("Unknown")
-                }
-
-                override fun onFailure(call: Call<Response<LoginResponse>>, t: Throwable) {
-                    Log.e(tag, t.message.toString())
-                    _loginViewState.value = LoginViewState.LoginErrorError("Unknown")
-                }
-            })
+    fun performLogin(userName: String, password: String): LiveData<LoginViewState> {
+        return Transformations.map(JoinRepository.performLogin(userName, password)) {
+            if (it is LoginViewState.LoginSuccess)
+                userCredentials = it.loginData
+            it
+        }
     }
 
     /**
@@ -89,14 +70,6 @@ class JoinViewModel : ViewModel() {
     fun isLoginDataValid(userName: String, password: String): Boolean {
         return userName.isNotEmpty() && userName.length > 2
                 && password.isNotEmpty() && password.length > 2
-    }
-
-    /**
-     * @return the user data that will used for PIN-Code checking.
-     * */
-    fun getUserCredentials(): LoginResponse {
-        val userCredentials = _loginViewState.value as LoginViewState.LoginSuccess
-        return userCredentials.loginData
     }
 
     /**
@@ -119,7 +92,11 @@ class JoinViewModel : ViewModel() {
      * @param userToken that is returned from the login process.
      * @param deviceToken that is returned from the login process.
      */
-    fun validatePinCode(userToken: String, deviceToken: String, pinCode: String) {
+    fun validatePinCode(
+        userToken: String = userCredentials!!.userToken,
+        deviceToken: String = userCredentials!!.deviceToken,
+        pinCode: String
+    ) {
         _pinCodeViewState.value = PinCodeViewState.Loading
 
         apiClient.validatePinCode(userToken, deviceToken, pinCode)

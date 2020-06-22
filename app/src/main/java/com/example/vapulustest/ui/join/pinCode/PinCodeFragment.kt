@@ -56,10 +56,7 @@ class PinCodeFragment : Fragment(), View.OnClickListener, View.OnTouchListener {
                 3 -> pin_code_indicator_iv.setImageResource(R.drawable.dot3)
                 4 -> { //PIN-Code is complete
                     pin_code_indicator_iv.setImageResource(R.drawable.dot4)
-                    joinViewModel.validatePinCode(
-                        joinViewModel.getUserCredentials().userToken,
-                        joinViewModel.getUserCredentials().deviceToken, it
-                    )
+                    joinViewModel.validatePinCode(pinCode = it)
                 }
             }
         })
